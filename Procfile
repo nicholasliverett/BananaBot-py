@@ -1,1 +1,1 @@
-worker: TimeBot.py
+worker: python TimeBot.py
