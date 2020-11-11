@@ -45,8 +45,6 @@ async def on_message(message):
                     await message.channel.send(embed=embed)
             elif ampm == 'pm':
                 hourr = 12
-                print(x)
-                print(message.content)
                 hours = int(hour) + hourr + 6
                 if hours >= 24:
                     hours = hours - 24
@@ -61,8 +59,6 @@ async def on_message(message):
                                     value=f'Original Message: {message.content}')
                     await message.channel.send(embed=embed)
         else:
-            print(x)
-            print(message.content)
             hours = int(hour) + hourr + 6
             if hours >= 24:
                 hours = hours - 24
