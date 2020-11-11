@@ -4,7 +4,7 @@ from datetime import date
 import os
 today = date.today()
 year = date.today()
-TOKEN = 'os.environ['DISCORD_TOKEN']'
+TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
 bot = commands.Bot(command_prefix=":")
 base_date = date(2020, 1, 1)
 timedif = today - base_date
