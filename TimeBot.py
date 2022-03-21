@@ -82,14 +82,12 @@ async def on_message(message):
                 embed = discord.Embed(colour=discord.Colour.dark_blue())
                 embed.add_field(name=f'{year.year}:{timedif.days + dateadd}:{int(hours)}:{minutes}:00 A.C (UTC +0)',
                                 value=f'Original Message: {message.content}')
-                embed.timestamp = datetime.utcnow()
                 await message.channel.send(embed=embed)
             else:
                 minutes = minutes.replace('?', '')
                 embed = discord.Embed(colour=discord.Colour.dark_blue())
                 embed.add_field(name=f'{year.year}:{timedif.days + dateadd}:{int(hours)}:{minutes}:00 A.C (UTC +0)',
                                 value=f'Original Message: {message.content}')
-                embed.timestamp = datetime.utcnow()
                 await message.channel.send(embed=embed)
 
     else:
