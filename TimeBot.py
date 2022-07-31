@@ -3,27 +3,42 @@ from discord.ext import commands
 from datetime import date
 import datetime
 import time
+import calendar
 today = date.today()
 year = date.today()
 TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
-bot = commands.Bot(command_prefix="/")
+bot = commands.Bot(command_prefix="?")
 base_date = date(year.year, 1, 1)
 timedif = today - base_date
 
+def convert_to_unix_time(date: datetime.datetime, days: int, hours: int, minutes: int, seconds: int) -> str:
+# Get the end date
+    end_date = date + datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+
+# Get a tuple of the date attributes
+    date_tuple = (end_date.year, end_date.month, end_date.day, end_date.hour, end_date.minute, end_date.second)
+
+# Convert to unix time
+    return f'<t:{int(time.mktime(datetime.datetime(*date_tuple).timetuple()))}:R>'
 
 @bot.event
 async def on_ready():
     print(bot.user.name + ' Logged on' + "\n")
 
-@bot.command()
-async def time(ctx, arg):
-    now = datetime.now()
-    unixtime = time.mktime(now.timetuple())
+@bot.command(name='repeat')
+async def repeat(ctx, arg):
+	await ctx.channel.send(arg)
+
+@bot.command(name='time')
+async def unixtime(ctx):
+    now = datetime.datetime.now()
+    utime = time.mktime(now.timetuple())
     embed = discord.Embed(colour=discord.Colour.dark_blue())
-    embed.add_field(name=f'Current Time: <t:{unixtime}>')
+    embed.add_field(name=f'Current Time: <t:{int(utime)}>', value=f'Message Sender: {ctx.message.author}')
+    print('working')
     await ctx.channel.send(embed=embed)
 
-@bot.event
+@bot.listen('on_message')
 async def on_message(message):
     hourr = 0
     dateadd = 1
