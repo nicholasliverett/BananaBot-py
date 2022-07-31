@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from datetime import date
 import datetime
+import time
 today = date.today()
 year = date.today()
 TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
@@ -14,6 +15,13 @@ timedif = today - base_date
 async def on_ready():
     print(bot.user.name + ' Logged on' + "\n")
 
+@bot.command()
+async def time(ctx, arg):
+    now = datetime.now()
+    unixtime = time.mktime(now.timetuple())
+    embed = discord.Embed(colour=discord.Colour.dark_blue())
+    embed.add_field(name=f'Current Time: <t:{unixtime}>')
+    await ctx.channel.send(embed=embed)
 
 @bot.event
 async def on_message(message):
