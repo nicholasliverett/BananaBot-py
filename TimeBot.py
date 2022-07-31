@@ -6,7 +6,7 @@ import time
 today = date.today()
 year = date.today()
 TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
-bot = commands.Bot(command_prefix=":")
+bot = commands.Bot(command_prefix="/")
 base_date = date(year.year, 1, 1)
 timedif = today - base_date
 
