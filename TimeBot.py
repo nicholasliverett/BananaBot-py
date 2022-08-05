@@ -40,8 +40,8 @@ class TimeModal(ui.Modal, title="Unix Time Converter"):
         utime = datetime.strptime(str((self.modaltime)), "%H:%M")
         inputtime = datetime(datetime.now().year, int(str(self.modalmonth)), int(str(self.modalday)), utime.hour, utime.minute)
         preunixtime = Time.mktime(inputtime.timetuple())
-        unixtime = f"<t:{int(preunixtime)}>"
-        embed = discord.Embed(title= self.title, description = unixtime, timestamp = datetime.now(), color = discord.Colour.yellow())
+        unixtime = f"<t:{int(preunixtime)}"
+        embed = discord.Embed(title= self.title, description = f"{unixtime}>\n{unixtime}", timestamp = datetime.now(), color = discord.Colour.yellow())
         embed.set_author(name=interaction.user, icon_url=interaction.user.avatar)
         await interaction.response.send_message(embed=embed)
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
