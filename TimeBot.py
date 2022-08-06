@@ -1,13 +1,18 @@
+from cProfile import label
 import discord
-from discord import ui, app_commands
+from discord import Embed, ui, app_commands
 from discord.ext import commands
-from datetime import datetime
+from datetime import date, datetime
 import time 
 import calendar
+from discord import ui
+import random
 Time = time
 TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
-
 guild = discord.Object(id="713404775357743216")
+error_responses_file = open("error_responses.txt", "r")
+error_responses = (error_responses_file.read()).split("\n")
+error_responses_file.close()
 
 class aclient(discord.Client):
     def __init__(self):
@@ -24,14 +29,26 @@ class aclient(discord.Client):
 client = aclient()
 tree = app_commands.CommandTree(client)
 
+class TimeModal(ui.Modal, title="Unix Time Converter"):
+    todayday = datetime.now().day
+    todaymonth = datetime.now().month
+    todaytime = datetime.now().strftime("%H:%M")
+    modalmonth = ui.TextInput(label="Month", style=discord.TextStyle.short, max_length=6, placeholder="Input Month", default=todaymonth)
+    modalday = ui.TextInput(label="Day", style=discord.TextStyle.short, max_length= 6, placeholder= "Input Day", default=todayday)
+    modaltime = ui.TextInput(label = 'Time', style=discord.TextStyle.short, max_length= 6, placeholder= "Input Time", default=todaytime)
+    async def on_submit(self, interaction: discord.Interaction,):
+        utime = datetime.strptime(str((self.modaltime)), "%H:%M")
+        inputtime = datetime(datetime.now().year, int(str(self.modalmonth)), int(str(self.modalday)), utime.hour, utime.minute)
+        preunixtime = Time.mktime(inputtime.timetuple())
+        unixtime = f"<t:{int(preunixtime)}"
+        embed = discord.Embed(title= self.title, description = f"{unixtime}>\n{unixtime} >", timestamp = datetime.now(), color = discord.Colour.yellow())
+        embed.set_author(name=interaction.user, icon_url=interaction.user.avatar)
+        await interaction.response.send_message(embed=embed)
+    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
+        await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
+
 @tree.command(name = "utime", description = "testing unix time thingy", guild=guild)
-async def self(interaction: discord.Interaction, time:str):
-    rtime = datetime.strptime(time, '%m/%d/%y %H:%M')
-    now = datetime.now()
-    utime = Time.mktime(now.timetuple())
-    rutime = Time.mktime(rtime.timetuple())
-    runixtime = f"<t:{int(rutime)}>"
-    unixtime = f"<t:{int(utime)}>"
-    await interaction.response.send_message(f"Requested Time:{runixtime} Time Now:{unixtime}")
+async def self(interaction: discord.Interaction):
+    await interaction.response.send_modal(TimeModal())
 
 client.run(TOKEN)
