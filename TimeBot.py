@@ -1,12 +1,14 @@
+import asyncio
 from cProfile import label
 import discord
 from discord import Embed, ui, app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 from datetime import date, datetime
 import time 
-import calendar
 from discord import ui
 import random
+from threading import Timer
+import requests
 Time = time
 TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
 guild = discord.Object(id="713404775357743216")
@@ -19,12 +21,21 @@ class aclient(discord.Client):
         super().__init__(intents=discord.Intents.default())
         self.synced = False
 
+    async def setup_hook(self) -> None:
+        self.bg_task = self.loop.create_task(self.pushmonitor())
+    
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced:
             await tree.sync(guild=discord.Object(id="713404775357743216"))
             self.synced = True
         print(f"We have logged in as {self.user}.")
+
+    async def pushmonitor(self):
+        await self.wait_until_ready()
+        while not self.is_closed():
+            response = requests.get("https://sg.bananaserver.tk/api/push/eO0hZAL0OK?status=up&msg=OK&ping=")
+            await asyncio.sleep(30)
 
 client = aclient()
 tree = app_commands.CommandTree(client)
