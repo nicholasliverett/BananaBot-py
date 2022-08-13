@@ -34,8 +34,8 @@ class aclient(discord.Client):
     async def pushmonitor(self):
         await self.wait_until_ready()
         while not self.is_closed():
-            response = requests.get("https://sg.bananaserver.tk/api/push/OabUoSSB5s?status=up&msg=OK&ping=")
-            await asyncio.sleep(30)
+            response = requests.get("https://sg.bananaserver.tk/api/push/MBxbE0BzLn?status=up&msg=OK&ping=")
+            await asyncio.sleep(20)
 
 client = aclient()
 tree = app_commands.CommandTree(client)
