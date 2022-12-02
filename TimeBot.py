@@ -71,12 +71,40 @@ class KianForm(ui.Modal, title="Kian Clock-in/out Form"):
         discord_user = interaction.user
         rate_experience = '6'
         business = 'Kian Services'
+        rank = self.rank
         clock_in = datetime.strptime(str((self.clock_in)), "%H:%M")
         clock_out = datetime.strptime(str((self.clock_out)), "%H:%M")
         total_time = clock_out - clock_in
+        date_now = datetime.now().strftime("%Y-%m-%d")
+        formsubresponse = requests.get(f"https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&entry.1981853841={self.other}&entry.851308795=nic&entry.1182622261={self.civ_callsign}&entry.403682742={str(rank).replace(' ', '+')}&entry.1123833559={str(discord_user).replace('#', '%23')}&entry.484096161={date_now}&entry.1016489151=normal&entry.1750041982={str(self.clock_in).zfill(5)}&entry.1697757237={str(self.clock_out).zfill(5)}&entry.1158350909={str(total_time).zfill(8)}&entry.1805919228=Yes")
+        print(formsubresponse)
+        print(f"https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&entry.1981853841={self.other}&entry.851308795=nic&entry.1182622261={self.civ_callsign}&entry.403682742={str(rank).replace(' ', '+')}&entry.1123833559={str(discord_user).replace('#', '%23')}&entry.484096161={date_now}&entry.1016489151=normal&entry.1750041982={str(self.clock_in).zfill(5)}&entry.1697757237={str(self.clock_out).zfill(5)}&entry.1158350909={str(total_time).zfill(8)}&entry.1805919228=Yes")
         await interaction.response.send_message(f'User: {discord_user}\nCiv Callsign: {self.civ_callsign}\nBusiness: {business}\nRank: {self.rank}\nClock In: {self.clock_in}\nClock Out: {self.clock_out}\nTotal Time: {total_time}\nRating: {rate_experience}\nOther: {self.other}')
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
         await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
+        print(error)
+
+class LSPDForm(ui.Modal, title="LSPD Clock-in/out Form"):
+    name = ui.TextInput(label = 'Name', style=discord.TextStyle.short, max_length= 50, placeholder= "Input Name", default='Jimmy M.')
+    rank = ui.TextInput(label = 'Rank', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Rank", default='Police Officer I')
+    clock_in = ui.TextInput(label='Clock In', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock In')
+    clock_out = ui.TextInput(label='Clock Out', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock Out')
+    patrol_type = ui.TextInput(label = 'Patrol Type', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Patrol Type", default='Normal Patrol')
+    async def on_submit(self, interaction: discord.Interaction):
+        discord_user = interaction.user
+        callsign = "410"
+        email ='gamingthingemail@gmail.com'
+        clock_in = datetime.strptime(str((self.clock_in)), "%H:%M")
+        clock_out = datetime.strptime(str((self.clock_out)), "%H:%M")
+        total_time = clock_out - clock_in
+        date_now = datetime.now().strftime("%Y-%m-%d")
+        #formsubresponse = requests.get(f"https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&emailAddress=gamingthingemail@gmail.com")
+        #print(formsubresponse)
+        url = f"https://docs.google.com/forms/d/e/1FAIpQLSfcc65OmXOdpoe-LMTHxhkqGnxKH3IAEw9dffmZjB-9MBHenQ/formResponse?usp=pp_url&emailAddress={email}&entry.1503124298={str(self.name).replace(' ', '+')}&entry.1563281728={callsign}&entry.909843694={str(discord_user).replace('#', '%23')}&entry.650105918={str(self.rank).replace(' ', '+')}&entry.22974012={str(self.clock_in).zfill(5)}&entry.289301560={str(self.clock_out).zfill(5)}&entry.1474572841={str(total_time).zfill(8)}&entry.1799406772={date_now}&entry.386319268={str(self.patrol_type).replace(' ', '+')}"
+        await interaction.response.send_message(url)
+    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
+        await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
+        print(error)
 
 
 @tree.command(name = "unixtime", description = "Unix Time Converter", guild=guild)
@@ -86,5 +114,9 @@ async def self(interaction: discord.Interaction):
 @tree.command(name = "kianform", description = "Kian Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(KianForm())
+
+@tree.command(name = "lspdform", description = "LSPD Clock-in/out Form", guild=guild)
+async def self(interaction: discord.Interaction):
+    await interaction.response.send_modal(LSPDForm())
 
 client.run(TOKEN)
