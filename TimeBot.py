@@ -76,10 +76,8 @@ class KianForm(ui.Modal, title="Kian Clock-in/out Form"):
         clock_out = datetime.strptime(str((self.clock_out)), "%H:%M")
         total_time = clock_out - clock_in
         date_now = datetime.now().strftime("%Y-%m-%d")
-        formsubresponse = requests.get(f"https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&entry.1981853841={self.other}&entry.851308795=nic&entry.1182622261={self.civ_callsign}&entry.403682742={str(rank).replace(' ', '+')}&entry.1123833559={str(discord_user).replace('#', '%23')}&entry.484096161={date_now}&entry.1016489151=normal&entry.1750041982={str(self.clock_in).zfill(5)}&entry.1697757237={str(self.clock_out).zfill(5)}&entry.1158350909={str(total_time).zfill(8)}&entry.1805919228=Yes")
-        print(formsubresponse)
-        print(f"https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&entry.1981853841={self.other}&entry.851308795=nic&entry.1182622261={self.civ_callsign}&entry.403682742={str(rank).replace(' ', '+')}&entry.1123833559={str(discord_user).replace('#', '%23')}&entry.484096161={date_now}&entry.1016489151=normal&entry.1750041982={str(self.clock_in).zfill(5)}&entry.1697757237={str(self.clock_out).zfill(5)}&entry.1158350909={str(total_time).zfill(8)}&entry.1805919228=Yes")
-        await interaction.response.send_message(f'User: {discord_user}\nCiv Callsign: {self.civ_callsign}\nBusiness: {business}\nRank: {self.rank}\nClock In: {self.clock_in}\nClock Out: {self.clock_out}\nTotal Time: {total_time}\nRating: {rate_experience}\nOther: {self.other}')
+        url = f""" https://docs.google.com/forms/d/e/1FAIpQLSdmCZb3q4hK39JAF1VUTxbKZOLqoXH5WBi8OL5xKAQqIkwOBg/formResponse?usp=pp_url&entry.1981853841={self.other}&entry.851308795=nic&entry.1182622261={self.civ_callsign}&entry.403682742={str(rank).replace(' ', '+')}&entry.1123833559={str(discord_user).replace('#', '%23')}&entry.484096161={date_now}&entry.1016489151=normal&entry.1750041982={str(self.clock_in).zfill(5)}&entry.1697757237={str(self.clock_out).zfill(5)}&entry.1158350909={str(total_time).zfill(8)}&entry.1805919228=Yes" """
+        await interaction.response.send_message(url)
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
         await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
         print(error)
@@ -106,6 +104,23 @@ class LSPDForm(ui.Modal, title="LSPD Clock-in/out Form"):
         await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
         print(error)
 
+class SAFDForm(ui.Modal, title="SAFD Clock-in/out Form"):
+    name = ui.TextInput(label = 'Name', style=discord.TextStyle.short, max_length= 50, placeholder= "Input Name", default='Jimmy M.')
+    callsign = ui.TextInput(label = 'Callsign', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Callsign", default='FD-21')
+    clock_in = ui.TextInput(label='Clock In', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock In')
+    clock_out = ui.TextInput(label='Clock Out', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock Out')
+    notes = ui.TextInput(label = 'Notes', style=discord.TextStyle.short, max_length= 100, placeholder= "Input Notes", required=False)
+    async def on_submit(self, interaction: discord.Interaction):
+        clock_in = datetime.strptime(str((self.clock_in)), "%H:%M")
+        clock_out = datetime.strptime(str((self.clock_out)), "%H:%M")
+        total_time = clock_out - clock_in
+        date_now = datetime.now().strftime("%Y-%m-%d")
+        url = f"https://docs.google.com/forms/d/e/1FAIpQLSd-G-oCDsHjdZX9l1DYoXl9GN5I7LJ2jTCuRg2KFG-lCxJ_PA/formResponse?usp=pp_url&entry.924437591={str(self.name).replace(' ', '+')}&entry.1740414105={self.callsign}&entry.333732655={self.notes}&entry.522182144={str(self.clock_in).zfill(5)}&entry.522100359={str(self.clock_out).zfill(5)}&entry.2145413509={str(total_time).zfill(8)}&entry.1362587187={date_now}"
+        await interaction.response.send_message(url)
+    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
+        await interaction.response.send_message(f"{random.choice(error_responses)} **Error:** {error}")
+        print(error)
+
 
 @tree.command(name = "unixtime", description = "Unix Time Converter", guild=guild)
 async def self(interaction: discord.Interaction):
@@ -118,5 +133,9 @@ async def self(interaction: discord.Interaction):
 @tree.command(name = "lspdform", description = "LSPD Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(LSPDForm())
+
+@tree.command(name = "safdform", description = "SAFD Clock-in/out Form", guild=guild)
+async def self(interaction: discord.Interaction):
+    await interaction.response.send_modal(SAFDForm())
 
 client.run(TOKEN)
