@@ -10,7 +10,7 @@ import random
 from threading import Timer
 import requests
 Time = time
-TOKEN = 'Nzc1ODM2NTgyNjYxMDYyNzM3.X6sIHw.D4j7RwH6oz-G3ENLYwlQjfLBJ5Q'
+TOKEN = 'TOKEN'
 guild = discord.Object(id="713404775357743216")
 error_responses_file = open("error_responses.txt", "r")
 error_responses = (error_responses_file.read()).split("\n")
