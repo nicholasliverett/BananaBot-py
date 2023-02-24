@@ -25,6 +25,10 @@ class aclient(discord.Client):
         self.synced = False
     
     async def on_ready(self):
+        await self.wait_until_ready()
+        if not self.synced:
+            await tree.sync(guild=discord.Object(id="713404775357743216"))
+            self.synced = True
         print(f"Logged in as {self.user}.")
 
 client = aclient()
