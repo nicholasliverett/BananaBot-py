@@ -23,22 +23,9 @@ class aclient(discord.Client):
     def __init__(self):
         super().__init__(intents=discord.Intents.default())
         self.synced = False
-
-    async def setup_hook(self) -> None:
-        self.bg_task = self.loop.create_task(self.pushmonitor())
     
     async def on_ready(self):
-        await self.wait_until_ready()
-        if not self.synced:
-            await tree.sync(guild=discord.Object(id="713404775357743216"))
-            self.synced = True
-        print(f"We have logged in as {self.user}.")
-
-    async def pushmonitor(self):
-        await self.wait_until_ready()
-        while not self.is_closed():
-            response = requests.get("https://uptime.bananaproject.tk/api/push/rGEAHK9Jfp?status=up&msg=OK&ping=")
-            await asyncio.sleep(30)
+        print(f"Logged in as {self.user}.")
 
 client = aclient()
 tree = app_commands.CommandTree(client)
@@ -84,7 +71,7 @@ class KianForm(ui.Modal, title="Kian Clock-in/out Form"):
 
 class LSPDForm(ui.Modal, title="LSPD Clock-in/out Form"):
     name = ui.TextInput(label = 'Name', style=discord.TextStyle.short, max_length= 50, placeholder= "Input Name", default='Jimmy M.')
-    rank = ui.TextInput(label = 'Rank', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Rank", default='Police Officer I')
+    rank = ui.TextInput(label = 'Rank', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Rank", default='Police Officer II')
     clock_in = ui.TextInput(label='Clock In', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock In')
     clock_out = ui.TextInput(label='Clock Out', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock Out')
     patrol_type = ui.TextInput(label = 'Patrol Type', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Patrol Type", default='Normal Patrol')
@@ -106,7 +93,7 @@ class LSPDForm(ui.Modal, title="LSPD Clock-in/out Form"):
 
 class SAFDForm(ui.Modal, title="SAFD Clock-in/out Form"):
     name = ui.TextInput(label = 'Name', style=discord.TextStyle.short, max_length= 50, placeholder= "Input Name", default='Jimmy M.')
-    callsign = ui.TextInput(label = 'Callsign', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Callsign", default='FD-21')
+    callsign = ui.TextInput(label = 'Callsign', style=discord.TextStyle.short, max_length= 30, placeholder= "Input Callsign", default='FD-14')
     clock_in = ui.TextInput(label='Clock In', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock In')
     clock_out = ui.TextInput(label='Clock Out', style=discord.TextStyle.short, max_length=6, placeholder='Input Clock Out')
     notes = ui.TextInput(label = 'Notes', style=discord.TextStyle.short, max_length= 100, placeholder= "Input Notes", required=False)
@@ -137,5 +124,13 @@ async def self(interaction: discord.Interaction):
 @tree.command(name = "safdform", description = "SAFD Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(SAFDForm())
-
+    
+@tree.command(name='sync', description='Banana only')
+async def sync(interaction: discord.Interaction):
+    if interaction.user.id == 624733100064112683:
+        await tree.sync()
+        print('Command tree synced by Banana')
+    else:
+        await interaction.response.send_message('You must be the one and only Banana to use this command!')
+        
 client.run(TOKEN)
