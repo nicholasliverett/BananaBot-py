@@ -27,7 +27,7 @@ class aclient(discord.Client):
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced:
-            await tree.sync(guild=discord.Object(id="713404775357743216"))
+            await tree.sync(guild=guild)
             self.synced = True
         print(f"Logged in as {self.user}.")
 
@@ -113,23 +113,23 @@ class SAFDForm(ui.Modal, title="SAFD Clock-in/out Form"):
         print(error)
 
 
-@tree.command(name = "unixtime", description = "Unix Time Converter", guild=guild)
+@client.tree.command(name = "unixtime", description = "Unix Time Converter", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(TimeModal())
 
-@tree.command(name = "kianform", description = "Kian Clock-in/out Form", guild=guild)
+@client.tree.command(name = "kianform", description = "Kian Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(KianForm())
 
-@tree.command(name = "lspdform", description = "LSPD Clock-in/out Form", guild=guild)
+@client.tree.command(name = "lspdform", description = "LSPD Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(LSPDForm())
 
-@tree.command(name = "safdform", description = "SAFD Clock-in/out Form", guild=guild)
+@client.tree.command(name = "safdform", description = "SAFD Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(SAFDForm())
     
-@tree.command(name='sync', description='Banana only', guild=guild)
+@client.tree.command(name='sync', description='Banana only', guild=guild)
 async def self(interaction: discord.Interaction):
     if interaction.user.id == 624733100064112683:
         await interaction.response.send_message(f'{await tree.sync()}')
