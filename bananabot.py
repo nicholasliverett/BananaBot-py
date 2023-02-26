@@ -133,7 +133,7 @@ async def self(interaction: discord.Interaction):
 @client.tree.command(name='sync', description='Banana only', guild=guild)
 async def self(interaction: discord.Interaction):
     if interaction.user.id == 624733100064112683:
-        await interaction.response.send_message(f'Synced: {await app_commands.CommandTree(self).sync()}')
+        await interaction.response.send_message(f'Synced: {await client.tree.sync()}')
         print('Command tree synced by Banana')
 
     else:
