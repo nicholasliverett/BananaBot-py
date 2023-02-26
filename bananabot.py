@@ -31,9 +31,9 @@ class aclient(discord.Client):
         self.tree.copy_global_to(guild=guild)
         await self.tree.sync(guild=guild)
 
-tree = app_commands.CommandTree()
 intents = discord.Intents.default()        
 client = aclient(intents=intents)
+tree = app_commands.CommandTree(client)
 
 
 class TimeModal(ui.Modal, title="Unix Time Converter"):
