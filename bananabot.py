@@ -22,17 +22,18 @@ def get_current_time():
 class aclient(discord.Client):
     def __init__(self):
         super().__init__(intents=discord.Intents.default())
-        self.synced = False
+        self.tree = app_commands.CommandTree(client)
     
     async def on_ready(self):
-        await self.wait_until_ready()
-        if not self.synced:
-            await tree.sync(guild=guild)
-            self.synced = True
         print(f"Logged in as {self.user}.")
+        
+    async def setup_hook(self):
+        self.tree.copy_global_to(guild)
+        await self.tree.sync(guild)
 
-client = aclient()
-tree = app_commands.CommandTree(client)
+intents = discord.Intents.default()        
+client = aclient(intents=intents)
+
 
 class TimeModal(ui.Modal, title="Unix Time Converter"):
     todayday = datetime.now().day
@@ -132,9 +133,10 @@ async def self(interaction: discord.Interaction):
 @client.tree.command(name='sync', description='Banana only', guild=guild)
 async def self(interaction: discord.Interaction):
     if interaction.user.id == 624733100064112683:
-        await interaction.response.send_message(f'{await tree.sync()}')
+        self.tree.copy_global_to()
+        await interaction.response.send_message(f'Synced: {await tree.sync()}')
         print('Command tree synced by Banana')
-        await interaction.response.send_message('Successfully Synced')
+
     else:
         await interaction.response.send_message('You must be the one and only Banana to use this command!')
         
