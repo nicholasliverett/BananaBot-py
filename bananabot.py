@@ -28,8 +28,8 @@ class aclient(discord.Client):
         print(f"Logged in as {self.user}.")
         
     async def setup_hook(self):
-        self.tree.copy_global_to(guild=guild)
-        await self.tree.sync(guild=guild)
+        self.tree.copy_global_to()
+        await self.tree.sync()
 
 intents = discord.Intents.default()        
 client = aclient(intents=intents)
@@ -129,14 +129,5 @@ async def self(interaction: discord.Interaction):
 @client.tree.command(name = "safdform", description = "SAFD Clock-in/out Form", guild=guild)
 async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(SAFDForm())
-    
-@client.tree.command(name='sync', description='Banana only', guild=guild)
-async def self(interaction: discord.Interaction):
-    if interaction.user.id == 624733100064112683:
-        await interaction.response.send_message(f'Synced: {await client.tree.sync()}')
-        print('Command tree synced by Banana')
-
-    else:
-        await interaction.response.send_message('You must be the one and only Banana to use this command!')
-        
+            
 client.run(TOKEN)
