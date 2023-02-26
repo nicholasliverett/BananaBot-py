@@ -134,6 +134,7 @@ async def sync(interaction: discord.Interaction):
     if interaction.user.id == 624733100064112683:
         await tree.sync()
         print('Command tree synced by Banana')
+        await interaction.response.send_message('Successfully Synced')
     else:
         await interaction.response.send_message('You must be the one and only Banana to use this command!')
         
