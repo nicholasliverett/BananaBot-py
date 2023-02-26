@@ -130,7 +130,7 @@ async def self(interaction: discord.Interaction):
     await interaction.response.send_modal(SAFDForm())
     
 @tree.command(name='sync', description='Banana only', guild=guild)
-async def sync(interaction: discord.Interaction):
+async def self(interaction: discord.Interaction):
     if interaction.user.id == 624733100064112683:
         await tree.sync()
         print('Command tree synced by Banana')
