@@ -22,7 +22,7 @@ def get_current_time():
 class aclient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
         super().__init__(intents=intents)
-        self.tree = app_commands.CommandTree(client)
+        self.tree = app_commands.CommandTree(self)
     
     async def on_ready(self):
         print(f"Logged in as {self.user}.")
