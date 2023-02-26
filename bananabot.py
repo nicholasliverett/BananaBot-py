@@ -28,7 +28,6 @@ class aclient(discord.Client):
         print(f"Logged in as {self.user}.")
         
     async def setup_hook(self):
-        self.tree.copy_global_to()
         await self.tree.sync()
 
 intents = discord.Intents.default()        
