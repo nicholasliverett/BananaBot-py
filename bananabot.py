@@ -20,8 +20,8 @@ def get_current_time():
     return current_time
 
 class aclient(discord.Client):
-    def __init__(self):
-        super().__init__(intents=discord.Intents.default())
+    def __init__(self, *, intents: discord.Intents):
+        super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(client)
     
     async def on_ready(self):
